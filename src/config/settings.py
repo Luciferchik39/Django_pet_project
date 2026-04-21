@@ -1,11 +1,15 @@
 # src/config/settings.py
 from pathlib import Path
+import sys
 
 from .config import get_allowed_hosts_list, get_db_config, settings
 
 # Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 ROOT_DIR = BASE_DIR.parent
+
+# Добавляем папку apps в путь Python
+sys.path.insert(0, str(ROOT_DIR / 'apps'))
 
 # Django Core Settings
 SECRET_KEY = settings.SECRET_KEY
@@ -20,9 +24,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Local apps (добавишь позже)
-    # 'apps.delivery',
+    'delivery',
 ]
 
 MIDDLEWARE = [
