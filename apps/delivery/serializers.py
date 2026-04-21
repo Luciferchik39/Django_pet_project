@@ -1,8 +1,6 @@
-# apps/delivery/serializers.py
-from typing import Any
-
+# apps/delivery/serializers.py (обновить ParcelResponseSerializer)
+from typing import Dict, Any, Optional
 from rest_framework import serializers
-
 from .models import Parcel, ParcelType
 
 
@@ -17,7 +15,6 @@ class ParcelTypeSerializer(serializers.ModelSerializer):
 class ParcelCreateSerializer(serializers.ModelSerializer):
     """Сериализатор для создания посылки"""
 
-    # Поле для названия типа (принимаем название, а не ID)
     parcel_type_name = serializers.CharField(write_only=True)
 
     class Meta:
@@ -53,7 +50,6 @@ class ParcelCreateSerializer(serializers.ModelSerializer):
         if not value or not value.strip():
             raise serializers.ValidationError("Тип посылки не может быть пустым")
 
-        # Проверяем, существует ли такой тип
         try:
             parcel_type = ParcelType.objects.get(name=value.strip())
             return parcel_type
@@ -62,7 +58,7 @@ class ParcelCreateSerializer(serializers.ModelSerializer):
                 f"Тип посылки '{value}' не найден. Доступные типы: Одежда, Электроника, Разное"
             ) from err
 
-    def create(self, validated_data: dict[str, Any]) -> Parcel:
+    def create(self, validated_data: Dict[str, Any]) -> Parcel:
         """Создание посылки"""
         parcel_type = validated_data.pop('parcel_type_name')
         session_id = self.context.get('session_id')
@@ -81,8 +77,18 @@ class ParcelResponseSerializer(serializers.ModelSerializer):
     """Сериализатор для ответа с данными посылки"""
 
     parcel_type = ParcelTypeSerializer(read_only=True)
+    delivery_status = serializers.SerializerMethodField()
 
     class Meta:
         model = Parcel
-        fields = ['id', 'name', 'weight', 'parcel_type', 'content_value',
-                  'delivery_cost', 'session_id', 'created_at', 'updated_at']
+        fields = [
+            'id', 'name', 'weight', 'parcel_type', 'content_value',
+            'delivery_cost', 'delivery_status', 'session_id',
+            'created_at', 'updated_at'
+        ]
+
+    def get_delivery_status(self, obj: Parcel) -> str:
+        """Возвращает статус расчета стоимости доставки"""
+        if obj.delivery_cost is None:
+            return "Не рассчитано"
+        return f"Рассчитано: {obj.delivery_cost} руб"
