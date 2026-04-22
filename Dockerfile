@@ -1,6 +1,9 @@
 # ============================================
 # Stage 1: Builder
 # ============================================
+# ============================================
+# Stage 1: Builder
+# ============================================
 FROM python:3.12-slim as builder
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -9,22 +12,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Устанавливаем Poetry 2.0+ (соответствует твоему pyproject.toml)
+# Ставим Poetry глобально
 RUN pip install --no-cache-dir "poetry>=2.0.0"
 
 WORKDIR /app
 
-# Создаем виртуальное окружение
+# 1. Создаем venv
 RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
 
-# Копируем файлы зависимостей
 COPY pyproject.toml poetry.lock* ./
 
-# Установка зависимостей в venv
-# (Здесь мы убрали проблемные флаги --jobs и --no-update)
+
 RUN poetry config virtualenvs.create false \
+    && . /opt/venv/bin/activate \
     && poetry install --no-interaction --no-ansi --no-root
+
+# 3. ПРОВЕРКА (через прямой путь к venv)
+RUN /opt/venv/bin/python -c "import django; print('Django OK')" \
+    && /opt/venv/bin/python -c "import celery; print('Celery OK')"
+
 
 # ============================================
 # Stage 2: Development
