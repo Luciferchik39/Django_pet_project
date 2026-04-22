@@ -1,6 +1,8 @@
 # apps/delivery/serializers.py (обновить ParcelResponseSerializer)
-from typing import Dict, Any, Optional
+from typing import Any
+
 from rest_framework import serializers
+
 from .models import Parcel, ParcelType
 
 
@@ -58,7 +60,7 @@ class ParcelCreateSerializer(serializers.ModelSerializer):
                 f"Тип посылки '{value}' не найден. Доступные типы: Одежда, Электроника, Разное"
             ) from err
 
-    def create(self, validated_data: Dict[str, Any]) -> Parcel:
+    def create(self, validated_data: dict[str, Any]) -> Parcel:
         """Создание посылки"""
         parcel_type = validated_data.pop('parcel_type_name')
         session_id = self.context.get('session_id')

@@ -1,6 +1,9 @@
 # src/config/settings.py
+import os
 from pathlib import Path
 import sys
+
+from loguru import logger
 
 from .config import get_allowed_hosts_list, get_db_config, settings
 
@@ -112,3 +115,58 @@ MEDIA_ROOT = ROOT_DIR / 'media'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Redis Configuration
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
+REDIS_DB = int(os.getenv('REDIS_DB', 0))
+REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_DB}"
+
+# Cache settings
+CACHE_TTL = int(os.getenv('CACHE_TTL', 3600))  # 1 hour default
+
+# Loguru Configuration
+LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')
+
+# Удаляем стандартный обработчик
+logger.remove()
+
+# Добавляем вывод в консоль
+logger.add(
+    sys.stdout,
+    format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+    level=LOG_LEVEL,
+    colorize=True
+)
+
+# Добавляем вывод в файл (опционально)
+logger.add(
+    Path(__file__).resolve().parent.parent.parent / "logs" / "app.log",
+    rotation="10 MB",
+    retention="30 days",
+    format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
+    level=LOG_LEVEL,
+    enqueue=True
+)
+
+logger.info(f"Loguru настроен. Уровень логирования: {LOG_LEVEL}")
+
+
+# Celery Configuration
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'
+CELERY_BEAT_SCHEDULE = {
+    'calculate-delivery-costs-every-5-minutes': {
+        'task': 'apps.delivery.tasks.calculate_all_parcels_delivery_cost',
+        'schedule': 300,  # 5 минут в секундах
+        'options': {
+            'expires': 280,  # Задача expires через 4 минуты 40 секунд
+        }
+    },
+}
+
+logger.info("Celery настроен")

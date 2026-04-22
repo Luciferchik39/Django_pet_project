@@ -1,10 +1,13 @@
 # apps/delivery/urls.py
 from django.urls import path
+
 from .views import (
+    CalculateDeliveryCostAPIView,  # ← добавить
     CreateParcelAPIView,
+    CurrencyRateAPIView,
     ParcelDetailAPIView,
+    ParcelTypeListAPIView,
     UserParcelsAPIView,
-    ParcelTypeListAPIView
 )
 
 app_name = 'delivery'
@@ -12,6 +15,14 @@ app_name = 'delivery'
 urlpatterns = [
     # Типы посылок
     path('api/parcel-types/', ParcelTypeListAPIView.as_view(), name='parcel-types'),
+
+    # Курс валют
+    path('api/currency-rate/', CurrencyRateAPIView.as_view(), name='currency-rate'),
+    path('api/currency-rate/cache/', CurrencyRateAPIView.as_view(), name='currency-rate-cache'),
+
+    # Расчет стоимости
+    path('api/parcels/calculate/', CalculateDeliveryCostAPIView.as_view(), name='calculate-all'),
+    path('api/parcels/<int:parcel_id>/calculate/', CalculateDeliveryCostAPIView.as_view(), name='calculate-parcel'),
 
     # Посылки
     path('api/parcels/', UserParcelsAPIView.as_view(), name='parcels-list'),
