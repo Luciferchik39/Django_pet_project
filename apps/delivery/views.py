@@ -3,6 +3,8 @@ from datetime import datetime
 
 from django.db import connections
 from django.db.utils import OperationalError
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
 from loguru import logger
 from rest_framework import status
 from rest_framework.request import Request
@@ -23,6 +25,11 @@ from .utils import SessionManager
 class ParcelTypeListAPIView(APIView):
     """API для получения списка типов посылок"""
 
+    @swagger_auto_schema(
+        operation_description="Получить список всех типов посылок",
+        responses={200: ParcelTypeSerializer(many=True)},
+        tags=['Parcel Types']
+    )
     def get(self, request: Request) -> Response:
         parcel_types = ParcelType.objects.all()
         serializer = ParcelTypeSerializer(parcel_types, many=True)
@@ -33,6 +40,23 @@ class ParcelTypeListAPIView(APIView):
 class CurrencyRateAPIView(APIView):
     """API для получения текущего курса USD/RUB"""
 
+    @swagger_auto_schema(
+        operation_description="Получить текущий курс USD/RUB (с кешированием в Redis)",
+        responses={
+            200: openapi.Response(
+                description="Курс успешно получен",
+                examples={
+                    "application/json": {
+                        "rate": 74.59,
+                        "currency": "USD/RUB",
+                        "timestamp": "2026-04-22T14:57:24.597549"
+                    }
+                }
+            ),
+            503: "Сервис курсов недоступен"
+        },
+        tags=['Currency']
+    )
     def get(self, request: Request) -> Response:
         logger.info("Запрос текущего курса валют")
         rate = currency_service.get_usd_rate()
@@ -50,6 +74,14 @@ class CurrencyRateAPIView(APIView):
             'error': 'Не удалось получить курс валюты'
         }, status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
+    @swagger_auto_schema(
+        operation_description="Очистить кеш курса валют в Redis",
+        responses={
+            200: "Кеш успешно очищен",
+            500: "Ошибка очистки кеша"
+        },
+        tags=['Currency']
+    )
     def delete(self, request: Request) -> Response:
         logger.info("Запрос на очистку кеша курса валют")
         success = currency_service.clear_cache()
@@ -69,6 +101,24 @@ class CurrencyRateAPIView(APIView):
 class CreateParcelAPIView(APIView):
     """API для создания посылки"""
 
+    @swagger_auto_schema(
+        operation_description="Создать новую посылку",
+        request_body=ParcelCreateSerializer,
+        responses={
+            201: openapi.Response(
+                description="Посылка успешно создана",
+                examples={
+                    "application/json": {
+                        "id": 1,
+                        "message": "Посылка успешно создана"
+                    }
+                }
+            ),
+            400: "Ошибка валидации",
+            404: "Тип посылки не найден"
+        },
+        tags=['Parcels']
+    )
     def post(self, request: Request) -> Response:
         logger.info("Получен запрос на создание посылки")
 
@@ -97,6 +147,14 @@ class CreateParcelAPIView(APIView):
 class ParcelDetailAPIView(APIView):
     """API для получения деталей посылки"""
 
+    @swagger_auto_schema(
+        operation_description="Получить детали посылки по ID (только для текущей сессии)",
+        responses={
+            200: ParcelResponseSerializer,
+            404: "Посылка не найдена"
+        },
+        tags=['Parcels']
+    )
     def get(self, request: Request, parcel_id: int) -> Response:
         logger.info(f"Запрос деталей посылки ID={parcel_id}")
 
@@ -117,6 +175,42 @@ class ParcelDetailAPIView(APIView):
 class UserParcelsAPIView(APIView):
     """API для получения всех посылок пользователя"""
 
+    @swagger_auto_schema(
+        operation_description="Получить список посылок текущего пользователя с пагинацией и фильтрацией",
+        manual_parameters=[
+            openapi.Parameter(
+                'page', openapi.IN_QUERY,
+                description="Номер страницы",
+                type=openapi.TYPE_INTEGER,
+                default=1
+            ),
+            openapi.Parameter(
+                'page_size', openapi.IN_QUERY,
+                description="Размер страницы (макс 100)",
+                type=openapi.TYPE_INTEGER,
+                default=10
+            ),
+            openapi.Parameter(
+                'parcel_type', openapi.IN_QUERY,
+                description="ID типа посылки для фильтрации",
+                type=openapi.TYPE_INTEGER,
+                required=False
+            ),
+            openapi.Parameter(
+                'delivery_cost_isnull', openapi.IN_QUERY,
+                description="Фильтр по рассчитанной стоимости (true/false)",
+                type=openapi.TYPE_BOOLEAN,
+                required=False
+            ),
+        ],
+        responses={
+            200: openapi.Response(
+                description="Список посылок",
+                schema=ParcelResponseSerializer(many=True)
+            )
+        },
+        tags=['Parcels']
+    )
     def get(self, request: Request) -> Response:
         session_id = SessionManager.get_session_id(request)
         logger.debug(f"Запрос списка посылок для сессии {session_id}")
@@ -149,10 +243,17 @@ class UserParcelsAPIView(APIView):
         }, status=status.HTTP_200_OK)
 
 
-# apps/delivery/views.py - исправляем сигнатуру метода
 class CalculateDeliveryCostAPIView(APIView):
     """API для ручного запуска расчета стоимости доставки"""
 
+    @swagger_auto_schema(
+        operation_description="Запустить расчет стоимости доставки (для всех посылок или конкретной)",
+        responses={
+            202: "Задача поставлена в очередь",
+            404: "Посылка не найдена"
+        },
+        tags=['Celery Tasks']
+    )
     def post(self, request: Request, parcel_id: int | None = None) -> Response:
         """
         POST /api/parcels/calculate/
@@ -199,6 +300,27 @@ class CalculateDeliveryCostAPIView(APIView):
 class HealthCheckAPIView(APIView):
     """API для проверки здоровья приложения"""
 
+    @swagger_auto_schema(
+        operation_description="Проверить состояние всех сервисов (Django, PostgreSQL, Redis, Celery)",
+        responses={
+            200: openapi.Response(
+                description="Все сервисы работают",
+                examples={
+                    "application/json": {
+                        "status": "healthy",
+                        "checks": {
+                            "django": "ok",
+                            "postgresql": "ok",
+                            "redis": "ok",
+                            "celery": "ok"
+                        }
+                    }
+                }
+            ),
+            503: "Некоторые сервисы недоступны"
+        },
+        tags=['Health']
+    )
     def get(self, request: Request) -> Response:
         """
         GET /api/health/
@@ -240,7 +362,6 @@ class HealthCheckAPIView(APIView):
 
         # 4. Проверка Celery (опционально)
         try:
-            # Способ 1: Через импорт celery приложения
             from config.celery import app as celery_app
             result = celery_app.control.ping(timeout=2)
             if result:
