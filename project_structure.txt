@@ -1,0 +1,74 @@
+================================================================================
+STRUCTURE OF PROJECT
+Path: C:\Users\Ilya\Documents\Delivery_service\Django_Delivery_service
+Date: 2026-04-22 19:12:43
+Show hidden: No
+Max depth: 4
+================================================================================
+
+📁 Django_Delivery_service/
+    ├── 📦 apps/
+    │   ├── 🐍 __init__.py (0 B)
+    │   └── 📁 delivery/
+    │       ├── 🐍 __init__.py (0 B)
+    │       ├── 🐍 admin.py (1.1 KB)
+    │       ├── 🐍 apps.py (206.0 B)
+    │       ├── 🐍 exceptions.py (4.5 KB)
+    │       ├── 🐍 middleware.py (1.9 KB)
+    │       ├── 📁 migrations/
+    │       │   ├── 🐍 0001_initial.py (2.3 KB)
+    │       │   ├── 🐍 0002_load_parcel_types.py (1.0 KB)
+    │       │   └── 🐍 __init__.py (0 B)
+    │       ├── 🐍 models.py (2.4 KB)
+    │       ├── 🐍 serializers.py (3.9 KB)
+    │       ├── 🐍 services.py (5.7 KB)
+    │       ├── 🐍 tasks.py (7.3 KB)
+    │       ├── 🐍 tests.py (29.0 B)
+    │       ├── 🐍 urls.py (1.3 KB)
+    │       ├── 🐍 utils.py (1.8 KB)
+    │       └── 🐍 views.py (15.9 KB)
+    ├── 📄 celerybeat-schedule (2.5 KB)
+    ├── ⚙️ docker-compose.yml (2.9 KB)
+    ├── 🐳 Dockerfile (2.6 KB)
+    ├── 🔨 Makefile (2.8 KB)
+    ├── 🖼️ media/
+    ├── 🔧 pyproject.toml (2.6 KB)
+    ├── ⚙️ pytest.ini (131.0 B)
+    ├── 📝 README.md (0 B)
+    ├── 📂 src/
+    │   ├── 🐍 __init__.py (0 B)
+    │   ├── ⚙️ config/
+    │   │   ├── 🐍 __init__.py (0 B)
+    │   │   ├── 🐍 asgi.py (389.0 B)
+    │   │   ├── 🐍 celery.py (1003.0 B)
+    │   │   ├── 🐍 config.py (2.7 KB)
+    │   │   ├── 🐍 settings.py (6.2 KB)
+    │   │   ├── 🐍 urls.py (1.7 KB)
+    │   │   └── 🐍 wsgi.py (389.0 B)
+    │   └── 🎮 manage.py (663.0 B)
+    ├── 🐍 sss.py (11.5 KB)
+    ├── 🎨 static/
+    ├── 📑 templates/
+    └── 🧪 tests/
+        ├── 🐍 __init__.py (0 B)
+        ├── 🐍 conftest.py (2.5 KB)
+        ├── 📁 integration/
+        │   ├── 🐍 __init__.py (0 B)
+        │   ├── 🐍 test_api.py (7.0 KB)
+        │   ├── 🐍 test_healthcheck.py (3.1 KB)
+        │   └── 🐍 test_middleware.py (1.6 KB)
+        └── 📁 unit/
+            ├── 🐍 __init__.py (0 B)
+            ├── 🐍 test_exceptions.py (2.1 KB)
+            ├── 🐍 test_models.py (2.5 KB)
+            ├── 🐍 test_serializers.py (3.8 KB)
+            ├── 🐍 test_services.py (2.2 KB)
+            ├── 🐍 test_tasks.py (5.6 KB)
+            └── 🐍 test_utils.py (2.1 KB)
+
+================================================================================
+STATISTICS:
+  Directories: 12
+  Files: 47
+  Total: 59
+================================================================================

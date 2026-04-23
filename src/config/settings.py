@@ -121,6 +121,15 @@ MEDIA_ROOT = ROOT_DIR / 'media'
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Настройки drf-yasg для подавления предупреждения
+SWAGGER_USE_COMPAT_RENDERERS = False  # <-- Добавьте эту строку
+
+# REST Framework
+REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'apps.delivery.exceptions.custom_exception_handler',
+    'COERCE_DECIMAL_TO_STRING': True,
+}
+
 # Redis Configuration
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
