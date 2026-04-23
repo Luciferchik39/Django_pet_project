@@ -391,3 +391,4 @@ class HealthCheckAPIView(APIView):
         http_status = status.HTTP_200_OK if status_data['status'] == 'healthy' else status.HTTP_503_SERVICE_UNAVAILABLE
 
         return Response(status_data, status=http_status)
+#hi

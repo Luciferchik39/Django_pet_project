@@ -1,9 +1,9 @@
-import pytest
 from decimal import Decimal
-from django.test import Client
+
+from delivery.models import Parcel, ParcelType
 from django.contrib.sessions.middleware import SessionMiddleware
-from django.test import RequestFactory
-from delivery.models import ParcelType, Parcel
+from django.test import Client, RequestFactory
+import pytest
 
 
 @pytest.fixture
@@ -74,3 +74,4 @@ def sample_parcels_list(db, parcel_type_electronics, parcel_type_clothes, mock_s
             delivery_cost=delivery_cost
         ))
     return parcels
+#hi

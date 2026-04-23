@@ -12,6 +12,7 @@ from loguru import logger
 from .models import Parcel
 from .services import currency_service
 
+#hi
 
 def calculate_delivery_cost(parcel: Parcel) -> Decimal:
     """

@@ -1,5 +1,4 @@
 import pytest
-from django.test import Client
 
 
 @pytest.mark.django_db
@@ -32,3 +31,4 @@ class TestRequestLoggingMiddleware:
         """Тест: middleware не мешает получению курса валют"""
         response = client.get('/api/currency-rate/')
         assert response.status_code == 200
+#hi

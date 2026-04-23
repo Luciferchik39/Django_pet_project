@@ -51,3 +51,4 @@ class TestSessionManager:
 
         # Проверяем, что вернулся правильный ключ
         assert session_id == existing_key
+#hi

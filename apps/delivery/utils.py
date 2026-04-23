@@ -47,3 +47,4 @@ class SessionManager:
     def get_session_value(request: HttpRequest, key: str, default: Any = None) -> Any:
         """Получить значение из сессии"""
         return request.session.get(key, default)
+#hi

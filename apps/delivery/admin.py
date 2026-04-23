@@ -4,6 +4,7 @@ from django.contrib import admin
 # apps/delivery/admin.py
 from .models import Parcel, ParcelType
 
+#hi
 
 @admin.register(ParcelType)
 class ParcelTypeAdmin(admin.ModelAdmin):

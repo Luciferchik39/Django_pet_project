@@ -1,5 +1,6 @@
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 
 @pytest.mark.django_db
@@ -68,3 +69,4 @@ class TestHealthCheck:
             assert checks.get('redis') == 'ok'
             assert checks.get('celery') == 'error'
             assert checks.get('django') == 'ok'
+#hi

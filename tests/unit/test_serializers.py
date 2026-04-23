@@ -86,3 +86,4 @@ class TestParcelResponseSerializer:
         serializer = ParcelResponseSerializer(sample_parcel)
         assert serializer.data['delivery_status'] == 'Рассчитано: 350 руб'
         assert serializer.data['delivery_cost'] == '350.00'
+#hi

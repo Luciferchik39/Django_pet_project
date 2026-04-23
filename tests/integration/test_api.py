@@ -1,7 +1,7 @@
-import pytest
 from decimal import Decimal
-from django.test import Client
-from delivery.models import ParcelType, Parcel
+
+from delivery.models import Parcel, ParcelType
+import pytest
 
 
 @pytest.mark.django_db
@@ -171,3 +171,4 @@ class TestCurrencyRateAPI:
         # Очищаем кеш
         response2 = client.delete('/api/currency-rate/cache/')
         assert response2.status_code == 200
+#hi
