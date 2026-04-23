@@ -1,0 +1,1 @@
+# Django_pet_project
