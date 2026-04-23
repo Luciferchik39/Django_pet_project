@@ -1,0 +1,53 @@
+# .dockerignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.env
+.venv
+venv/
+*.log
+
+# Django
+db.sqlite3
+*.sqlite3
+/staticfiles/
+/media/
+/logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# Tests
+/tests/
+/pytest.ini
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Tools
+.mypy_cache/
+.ruff_cache/
+.tox/
+.pre-commit-config.yaml
+
+# Project specific
+project_structure.txt
+cookies.txt
+*.pyc
+*.pyo
