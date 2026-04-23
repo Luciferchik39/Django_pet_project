@@ -1,9 +1,9 @@
-import pytest
 from decimal import Decimal
-from django.test import Client
+
+from delivery.models import Parcel, ParcelType
 from django.contrib.sessions.middleware import SessionMiddleware
-from django.test import RequestFactory
-from delivery.models import ParcelType, Parcel
+from django.test import Client, RequestFactory
+import pytest
 
 
 @pytest.fixture

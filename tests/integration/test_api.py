@@ -1,7 +1,7 @@
-import pytest
 from decimal import Decimal
-from django.test import Client
-from delivery.models import ParcelType, Parcel
+
+from delivery.models import Parcel, ParcelType
+import pytest
 
 
 @pytest.mark.django_db
