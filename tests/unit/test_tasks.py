@@ -139,3 +139,4 @@ class TestCeleryTasks:
         assert result['total'] == 0
         assert result['success'] == 0
         assert result['failed'] == 0
+#hi

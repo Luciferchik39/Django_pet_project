@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from .models import Parcel, ParcelType
 
+#hi
 
 class ParcelTypeSerializer(serializers.ModelSerializer):
     """Сериализатор для типа посылки"""

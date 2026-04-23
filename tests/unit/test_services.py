@@ -62,3 +62,4 @@ class TestCurrencyRateService:
             service._save_to_cache(93.7)
 
             mock_redis_instance.setex.assert_called_once()
+#hi

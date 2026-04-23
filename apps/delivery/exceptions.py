@@ -2,7 +2,7 @@
 """
 Кастомные исключения и обработчики ошибок для API
 """
-
+#hi
 from celery.exceptions import CeleryError
 from django.conf import settings  # ← добавить импорт
 from django.db import DatabaseError

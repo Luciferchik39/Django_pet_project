@@ -50,3 +50,4 @@ class TestExceptions:
 
         with pytest.raises(CurrencyRateError):
             raise CurrencyRateError(str(mock_error.message))
+#hi

@@ -2,6 +2,7 @@
 from django.db import models
 from django.db.models import CharField, DateTimeField, DecimalField, ForeignKey
 
+#hi
 
 class ParcelType(models.Model):
     """Типы посылок"""

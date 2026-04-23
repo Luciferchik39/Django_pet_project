@@ -171,3 +171,4 @@ class TestCurrencyRateAPI:
         # Очищаем кеш
         response2 = client.delete('/api/currency-rate/cache/')
         assert response2.status_code == 200
+#hi

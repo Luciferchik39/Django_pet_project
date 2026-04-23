@@ -69,3 +69,4 @@ class TestHealthCheck:
             assert checks.get('redis') == 'ok'
             assert checks.get('celery') == 'error'
             assert checks.get('django') == 'ok'
+#hi

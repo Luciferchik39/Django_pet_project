@@ -2,7 +2,7 @@
 """
 Middleware для логирования HTTP запросов и времени выполнения
 """
-
+#hi
 import time
 
 from django.utils.deprecation import MiddlewareMixin

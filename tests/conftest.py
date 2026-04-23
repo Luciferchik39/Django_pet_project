@@ -74,3 +74,4 @@ def sample_parcels_list(db, parcel_type_electronics, parcel_type_clothes, mock_s
             delivery_cost=delivery_cost
         ))
     return parcels
+#hi

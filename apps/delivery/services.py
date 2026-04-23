@@ -2,7 +2,7 @@
 """
 Сервисы для работы с внешними API и кешированием
 """
-
+#hi
 from datetime import datetime
 import json
 
